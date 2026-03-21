@@ -65,9 +65,24 @@ const deleteCourse = catchAsync(async (req, res) => {
   });
 });
 
+// Admin Course Data Update
+const updateCourse = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const courseData = req.body;
+  const result = await Course.findByIdAndUpdate(id, courseData, { new: true });
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Course updated successfully",
+    data: result,
+  });
+});
+
 module.exports = {
   getAllCourses,
   getCourseById,
   createCourse,
   deleteCourse,
+  updateCourse,
 };
