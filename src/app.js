@@ -11,7 +11,12 @@ const sendResponse = require("./app/utils/sendResponse");
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://skill-stream-client.vercel.app"],
+    credentials: true,
+  }),
+);
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,8 +33,8 @@ app.get("/", (req, res) => {
     message: "Skill Stream Server is running smoothly.",
     data: {
       timestamp: new Date(),
-      status: "Healthy"
-    }
+      status: "Healthy",
+    },
   });
 });
 

@@ -1,9 +1,17 @@
 const Testimonial = require("./testimonial.model");
+const QueryBuilder = require("../../utils/QueryBuilder");
 
 // Get All Testimonial Data
 const getAllTestimonials = async (req, res) => {
   try {
-    const result = await Testimonial.find();
+    const testimonialQuery = new QueryBuilder(Testimonial.find(), req.query)
+      .search(["name", "details"])
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+
+    const result = await testimonialQuery.modelQuery;
     res.send(result);
   } catch (error) {
     res.status(500).send({ message: error.message });

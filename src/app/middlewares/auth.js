@@ -3,7 +3,7 @@ const AppError = require("../utils/AppError");
 
 const auth = (role) => async (req, res, next) => {
   try {
-    let token = req.headers.authorization;
+    let token = req.cookies.accessToken || req.headers.authorization;
     if (!token) {
       throw new AppError(401, "You are not authorized!");
     }

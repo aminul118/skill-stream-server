@@ -1,9 +1,17 @@
 const Enrollment = require("./enrollment.model");
+const QueryBuilder = require("../../utils/QueryBuilder");
 
 // Student buy all course here
 const getAllEnrollments = async (req, res) => {
   try {
-    const result = await Enrollment.find();
+    const enrollmentQuery = new QueryBuilder(Enrollment.find(), req.query)
+      .search(["BuyCourseName", "name", "email", "PayTrxID"])
+      .filter()
+      .sort()
+      .paginate()
+      .fields();
+
+    const result = await enrollmentQuery.modelQuery;
     res.send(result);
   } catch (error) {
     res.status(500).send({ message: error.message });
