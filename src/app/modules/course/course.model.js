@@ -11,7 +11,7 @@ const courseSchema = new mongoose.Schema(
       required: true,
     },
     Course_Price: {
-      type: Number,
+      type: mongoose.Schema.Types.Mixed,
       required: true,
     },
     Course_Start: {
@@ -35,6 +35,13 @@ const courseSchema = new mongoose.Schema(
     Course_Guideline_Six: {
       type: String,
     },
+    // Adding typo versions for compatibility with existing database records
+    Course_GideLine_One: { type: String },
+    Course_GideLine_Two: { type: String },
+    Course_GideLine_Three: { type: String },
+    Course_GideLine_Four: { type: String },
+    Course_GideLine_Five: { type: String },
+    Course_GideLine_Six: { type: String },
     image: {
       type: String,
     },

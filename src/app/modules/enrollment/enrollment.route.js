@@ -8,13 +8,23 @@ const {
   deleteEnrollment,
 } = require('./enrollment.controller');
 
+const auth = require('../../middlewares/auth');
+
 const router = express.Router();
 
-router.get('/StudentBuyAllCourse', getAllEnrollments);
-router.get('/CoursesPayDetails/:id', getEnrollmentByCourseId);
-router.get('/MyAllCourse/:email', getMyEnrollments);
-router.post('/StudentBuyCourseInformationPost', createEnrollment);
-router.patch('/AdminApprovedStudentBuyCourse/:id', approveEnrollment);
-router.delete('/AdminDeleteStudentBuyCourse/:id', deleteEnrollment);
+router.get('/StudentBuyAllCourse', auth('admin'), getAllEnrollments);
+router.get('/CoursesPayDetails/:id', auth(), getEnrollmentByCourseId);
+router.get('/MyAllCourse/:email', auth('user'), getMyEnrollments);
+router.post('/StudentBuyCourseInformationPost', auth('user'), createEnrollment);
+router.patch(
+  '/AdminApprovedStudentBuyCourse/:id',
+  auth('admin'),
+  approveEnrollment,
+);
+router.delete(
+  '/AdminDeleteStudentBuyCourse/:id',
+  auth('admin'),
+  deleteEnrollment,
+);
 
 module.exports = router;

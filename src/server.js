@@ -4,6 +4,7 @@ const connectDB = require('./app/config/db');
 const { connectRedis } = require('./app/config/redis');
 const serverGracefulShutdown = require('./app/utils/serverGracefulShutdown');
 const seedAdmin = require('./app/utils/seedAdmin');
+const { initSocket } = require('./app/config/socket');
 
 let server;
 
@@ -12,6 +13,7 @@ const startServer = async () => {
     await connectDB();
     await connectRedis();
     await seedAdmin();
+    await initSocket(server);
 
     // Start Listening
     const port = env.PORT || 5000;

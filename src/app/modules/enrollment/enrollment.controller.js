@@ -1,82 +1,150 @@
 const Enrollment = require('./enrollment.model');
 const QueryBuilder = require('../../utils/QueryBuilder');
+const { getIO } = require('../../config/socket');
+const { StatusCodes } = require('http-status-codes');
+const sendResponse = require('../../utils/sendResponse');
+const AppError = require('../../utils/AppError');
+const catchAsync = require('../../utils/catchAsync');
 
 // Student buy all course here
-const getAllEnrollments = async (req, res) => {
-  try {
-    const enrollmentQuery = new QueryBuilder(Enrollment.find(), req.query)
-      .search(['BuyCourseName', 'name', 'email', 'PayTrxID'])
-      .filter()
-      .sort()
-      .paginate()
-      .fields();
+const getAllEnrollments = catchAsync(async (req, res) => {
+  const enrollmentQuery = new QueryBuilder(
+    Enrollment.find().populate('user').populate('course'),
+    req.query,
+  )
+    .search(['transactionId', 'contactNumber', 'status'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-    const result = await enrollmentQuery.modelQuery;
-    res.send(result);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
+  const result = await enrollmentQuery.modelQuery;
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Enrollments retrieved successfully',
+    data: result,
+  });
+});
 
-// Single course details (by CourseBuyId)
-const getEnrollmentByCourseId = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const result = await Enrollment.findOne({ CourseBuyId: id });
-    res.send(result);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
+// Single course details
+const getEnrollmentByCourseId = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const result = await Enrollment.findById(id)
+    .populate('user')
+    .populate('course');
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Enrollment details retrieved successfully',
+    data: result,
+  });
+});
 
 // Student my course all
-const getMyEnrollments = async (req, res) => {
-  try {
-    const email = req.params.email;
-    const result = await Enrollment.find({ email: email });
-    res.send(result);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
+const getMyEnrollments = catchAsync(async (req, res) => {
+  const userId = req.user.userId;
+  const result = await Enrollment.find({ user: userId }).populate('course');
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'My enrollments retrieved successfully',
+    data: result,
+  });
+});
 
 // Student Buy Course (Send Request)
-const createEnrollment = async (req, res) => {
-  try {
-    const enrollmentData = req.body;
-    const newEnrollment = new Enrollment(enrollmentData);
-    const result = await newEnrollment.save();
-    res.send(result);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
+const createEnrollment = catchAsync(async (req, res) => {
+  if (req.user.role !== 'user') {
+    throw new AppError(StatusCodes.FORBIDDEN, 'Only students can buy courses');
   }
-};
+
+  const {
+    courseId,
+    transactionId,
+    amount,
+    paymentMethod,
+    contactNumber,
+    address,
+    parentContactNumber,
+    guardianName,
+  } = req.body;
+
+  // Sanitize amount: handle strings with commas (e.g., "10,000")
+  const sanitizedAmount =
+    typeof amount === 'string'
+      ? Number(amount.replace(/[^0-9.]/g, ''))
+      : Number(amount) || 0;
+
+  const enrollmentData = {
+    user: req.user.userId,
+    course: courseId,
+    transactionId,
+    amount: sanitizedAmount,
+    paymentMethod,
+    contactNumber,
+    address,
+    parentContactNumber,
+    guardianName,
+  };
+
+  const newEnrollment = new Enrollment(enrollmentData);
+  const result = await newEnrollment.save();
+
+  // Emit real-time event
+  const io = getIO();
+  io.to(req.user.userId.toString()).emit('enrollmentStatus', {
+    status: 'pending',
+    message: 'Your enrollment request has been submitted.',
+    courseId,
+  });
+
+  sendResponse(res, {
+    statusCode: StatusCodes.CREATED,
+    success: true,
+    message: 'Enrollment request submitted successfully',
+    data: result,
+  });
+});
 
 // Admin approved student buy course
-const approveEnrollment = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const result = await Enrollment.findByIdAndUpdate(
-      id,
-      { status: 'Approved' },
-      { new: true },
-    );
-    res.send(result);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
+const approveEnrollment = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const result = await Enrollment.findByIdAndUpdate(
+    id,
+    { status: 'completed' },
+    { new: true },
+  ).populate('user');
+
+  if (result) {
+    // Emit real-time event to the user
+    const io = getIO();
+    io.to(result.user._id.toString()).emit('enrollmentStatus', {
+      status: 'completed',
+      message: `Congratulations! Your enrollment in the course has been approved.`,
+      courseId: result.course,
+    });
   }
-};
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Enrollment approved successfully',
+    data: result,
+  });
+});
 
 // Admin student buy course Delete
-const deleteEnrollment = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const result = await Enrollment.findByIdAndDelete(id);
-    res.send(result);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
+const deleteEnrollment = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const result = await Enrollment.findByIdAndDelete(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: 'Enrollment deleted successfully',
+    data: result,
+  });
+});
 
 module.exports = {
   getAllEnrollments,

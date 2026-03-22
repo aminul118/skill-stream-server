@@ -2,28 +2,45 @@ const mongoose = require('mongoose');
 
 const enrollmentSchema = new mongoose.Schema(
   {
-    CourseBuyId: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
-    email: {
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+      required: true,
+    },
+    transactionId: {
       type: String,
       required: true,
+      unique: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
+      enum: ['Bkash', 'Rocket', 'MasterCard', 'Visa'],
     },
     status: {
       type: String,
-      default: 'Pending',
+      enum: ['pending', 'completed', 'cancelled', 'rejected'],
+      default: 'pending',
     },
-    // Adding other potential fields based on usage
-    courseName: String,
-    price: Number,
-    transactionId: String,
+    contactNumber: String,
+    parentContactNumber: String,
+    guardianName: String,
+    address: String,
+    enrolledAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true, versionKey: false },
 );
 
-module.exports = mongoose.model(
-  'Enrollment',
-  enrollmentSchema,
-  'StudentBuyCourse',
-);
+module.exports = mongoose.model('Enrollment', enrollmentSchema, 'enrollments');
