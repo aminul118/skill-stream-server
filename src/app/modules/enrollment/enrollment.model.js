@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const enrollmentSchema = new mongoose.Schema(
   {
@@ -12,7 +12,7 @@ const enrollmentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Pending",
+      default: 'Pending',
     },
     // Adding other potential fields based on usage
     courseName: String,
@@ -23,7 +23,7 @@ const enrollmentSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model(
-  "Enrollment",
+  'Enrollment',
   enrollmentSchema,
-  "StudentBuyCourse",
+  'StudentBuyCourse',
 );

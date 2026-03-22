@@ -1,19 +1,19 @@
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const compression = require("compression");
-const { StatusCodes } = require("http-status-codes");
-const router = require("./app/routes");
-const globalErrorHandler = require("./app/middlewares/globalErrorHandler");
-const notFound = require("./app/middlewares/notFound");
-const sendResponse = require("./app/utils/sendResponse");
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const compression = require('compression');
+const { StatusCodes } = require('http-status-codes');
+const router = require('./app/routes');
+const globalErrorHandler = require('./app/middlewares/globalErrorHandler');
+const notFound = require('./app/middlewares/notFound');
+const sendResponse = require('./app/utils/sendResponse');
 
 const app = express();
 
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://skill-stream-client.vercel.app"],
+    origin: ['http://localhost:5173', 'https://skill-stream-client.vercel.app'],
     credentials: true,
   }),
 );
@@ -23,17 +23,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // API Routes
-app.use("/", router);
+app.use('/', router);
 
 // Test Route
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Skill Stream Server is running smoothly.",
+    message: 'Skill Stream Server is running smoothly.',
     data: {
       timestamp: new Date(),
-      status: "Healthy",
+      status: 'Healthy',
     },
   });
 });

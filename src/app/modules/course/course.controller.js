@@ -1,13 +1,13 @@
-const Course = require("./course.model");
-const QueryBuilder = require("../../utils/QueryBuilder");
-const catchAsync = require("../../utils/catchAsync");
-const sendResponse = require("../../utils/sendResponse");
-const { StatusCodes } = require("http-status-codes");
+const Course = require('./course.model');
+const QueryBuilder = require('../../utils/QueryBuilder');
+const catchAsync = require('../../utils/catchAsync');
+const sendResponse = require('../../utils/sendResponse');
+const { StatusCodes } = require('http-status-codes');
 
 // Get All Courses Data
 const getAllCourses = catchAsync(async (req, res) => {
   const courseQuery = new QueryBuilder(Course.find(), req.query)
-    .search(["Course_Name", "Course_Title"])
+    .search(['Course_Name', 'Course_Title'])
     .filter()
     .sort()
     .paginate()
@@ -19,7 +19,7 @@ const getAllCourses = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Courses retrieved successfully",
+    message: 'Courses retrieved successfully',
     meta,
     data: result,
   });
@@ -33,7 +33,7 @@ const getCourseById = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Course retrieved successfully",
+    message: 'Course retrieved successfully',
     data: result,
   });
 });
@@ -47,7 +47,7 @@ const createCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
     success: true,
-    message: "Course created successfully",
+    message: 'Course created successfully',
     data: result,
   });
 });
@@ -60,7 +60,7 @@ const deleteCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Course deleted successfully",
+    message: 'Course deleted successfully',
     data: result,
   });
 });
@@ -74,7 +74,7 @@ const updateCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
-    message: "Course updated successfully",
+    message: 'Course updated successfully',
     data: result,
   });
 });

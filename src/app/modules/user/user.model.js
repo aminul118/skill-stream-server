@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
   {
@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin", "super-admin"],
-      default: "user",
+      enum: ['user', 'admin', 'super-admin'],
+      default: 'user',
     },
     photo: {
       type: String,
@@ -50,12 +50,12 @@ const userSchema = new mongoose.Schema(
     },
     isActive: {
       type: String,
-      enum: ["active", "inactive", "blocked"],
-      default: "inactive",
+      enum: ['active', 'inactive', 'blocked'],
+      default: 'inactive',
     },
     status: {
       type: String,
-      default: "pending",
+      default: 'pending',
     },
     date: {
       type: String,
@@ -64,4 +64,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false },
 );
 
-module.exports = mongoose.model("User", userSchema, "users");
+module.exports = mongoose.model('User', userSchema, 'users');

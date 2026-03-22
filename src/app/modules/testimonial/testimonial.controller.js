@@ -1,11 +1,11 @@
-const Testimonial = require("./testimonial.model");
-const QueryBuilder = require("../../utils/QueryBuilder");
+const Testimonial = require('./testimonial.model');
+const QueryBuilder = require('../../utils/QueryBuilder');
 
 // Get All Testimonial Data
 const getAllTestimonials = async (req, res) => {
   try {
     const testimonialQuery = new QueryBuilder(Testimonial.find(), req.query)
-      .search(["name", "details"])
+      .search(['name', 'details'])
       .filter()
       .sort()
       .paginate()
@@ -36,7 +36,7 @@ const approveTestimonial = async (req, res) => {
     const id = req.params.id;
     const result = await Testimonial.findByIdAndUpdate(
       id,
-      { status: "Approved" },
+      { status: 'Approved' },
       { new: true },
     );
     res.send(result);

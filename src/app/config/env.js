@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config();
 
 const env = {
   NODE_ENV: process.env.NODE_ENV,

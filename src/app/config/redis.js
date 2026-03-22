@@ -1,5 +1,5 @@
-const { createClient } = require("redis");
-const env = require("./env");
+const { createClient } = require('redis');
+const env = require('./env');
 
 const redisClient = createClient({
   username: env.REDIS.USERNAME,
@@ -10,14 +10,14 @@ const redisClient = createClient({
   },
 });
 
-redisClient.on("error", (err) => {
-  console.error("Redis Client Error:", err);
+redisClient.on('error', (err) => {
+  console.error('Redis Client Error:', err);
 });
 
 const connectRedis = async () => {
   if (!redisClient.isOpen) {
     await redisClient.connect();
-    console.log("✅ Redis Connected");
+    console.log('✅ Redis Connected');
   }
 };
 

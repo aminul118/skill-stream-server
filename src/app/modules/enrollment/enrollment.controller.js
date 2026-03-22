@@ -1,11 +1,11 @@
-const Enrollment = require("./enrollment.model");
-const QueryBuilder = require("../../utils/QueryBuilder");
+const Enrollment = require('./enrollment.model');
+const QueryBuilder = require('../../utils/QueryBuilder');
 
 // Student buy all course here
 const getAllEnrollments = async (req, res) => {
   try {
     const enrollmentQuery = new QueryBuilder(Enrollment.find(), req.query)
-      .search(["BuyCourseName", "name", "email", "PayTrxID"])
+      .search(['BuyCourseName', 'name', 'email', 'PayTrxID'])
       .filter()
       .sort()
       .paginate()
@@ -58,7 +58,7 @@ const approveEnrollment = async (req, res) => {
     const id = req.params.id;
     const result = await Enrollment.findByIdAndUpdate(
       id,
-      { status: "Approved" },
+      { status: 'Approved' },
       { new: true },
     );
     res.send(result);

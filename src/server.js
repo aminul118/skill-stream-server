@@ -1,9 +1,9 @@
-const app = require("./app");
-const env = require("./app/config/env");
-const connectDB = require("./app/config/db");
-const { connectRedis } = require("./app/config/redis");
-const serverGracefulShutdown = require("./app/utils/serverGracefulShutdown");
-const seedAdmin = require("./app/utils/seedAdmin");
+const app = require('./app');
+const env = require('./app/config/env');
+const connectDB = require('./app/config/db');
+const { connectRedis } = require('./app/config/redis');
+const serverGracefulShutdown = require('./app/utils/serverGracefulShutdown');
+const seedAdmin = require('./app/utils/seedAdmin');
 
 let server;
 
@@ -21,7 +21,7 @@ const startServer = async () => {
 
     serverGracefulShutdown(server);
   } catch (error) {
-    console.error("❌ Failed to start server:", error);
+    console.error('❌ Failed to start server:', error);
     process.exit(1);
   }
 };

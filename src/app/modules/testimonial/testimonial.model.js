@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const testimonialSchema = new mongoose.Schema(
   {
@@ -15,14 +15,14 @@ const testimonialSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Pending",
+      default: 'Pending',
     },
   },
   { timestamps: true, versionKey: false },
 );
 
 module.exports = mongoose.model(
-  "Testimonial",
+  'Testimonial',
   testimonialSchema,
-  "Testimonial",
+  'Testimonial',
 );

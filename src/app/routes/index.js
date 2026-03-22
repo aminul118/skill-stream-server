@@ -1,36 +1,36 @@
-const express = require("express");
-const userRoutes = require("../modules/user/user.route");
-const courseRoutes = require("../modules/course/course.route");
-const enrollmentRoutes = require("../modules/enrollment/enrollment.route");
-const testimonialRoutes = require("../modules/testimonial/testimonial.route");
-const authRoutes = require("../modules/auth/auth.route");
-const contactRoutes = require("../modules/contact/contact.route");
+const express = require('express');
+const userRoutes = require('../modules/user/user.route');
+const courseRoutes = require('../modules/course/course.route');
+const enrollmentRoutes = require('../modules/enrollment/enrollment.route');
+const testimonialRoutes = require('../modules/testimonial/testimonial.route');
+const authRoutes = require('../modules/auth/auth.route');
+const contactRoutes = require('../modules/contact/contact.route');
 
 const router = express.Router();
 
 const moduleRoutes = [
   {
-    path: "/user",
+    path: '/user',
     route: userRoutes,
   },
   {
-    path: "/courses",
+    path: '/courses',
     route: courseRoutes,
   },
   {
-    path: "/enrollments",
+    path: '/enrollments',
     route: enrollmentRoutes,
   },
   {
-    path: "/testimonials",
+    path: '/testimonials',
     route: testimonialRoutes,
   },
   {
-    path: "/auth",
+    path: '/auth',
     route: authRoutes,
   },
   {
-    path: "/contact",
+    path: '/contact',
     route: contactRoutes,
   },
 ];

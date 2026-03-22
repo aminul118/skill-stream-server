@@ -1,7 +1,7 @@
-const { generateToken, verifyToken } = require("./jwt");
-const AppError = require("./AppError");
-const User = require("../modules/user/user.model");
-const env = require("../config/env");
+const { generateToken, verifyToken } = require('./jwt');
+const AppError = require('./AppError');
+const User = require('../modules/user/user.model');
+const env = require('../config/env');
 
 const createUserTokens = (user) => {
   const jwtPayload = {
@@ -34,11 +34,11 @@ const getNewAccessToken = async (refreshToken) => {
     const user = await User.findOne({ email: verifiedToken.email });
 
     if (!user) {
-      throw new AppError(404, "User not found");
+      throw new AppError(404, 'User not found');
     }
 
-    if (user.isActive !== "active") {
-      throw new AppError(403, "User is not active");
+    if (user.isActive !== 'active') {
+      throw new AppError(403, 'User is not active');
     }
 
     const jwtPayload = {
@@ -55,7 +55,7 @@ const getNewAccessToken = async (refreshToken) => {
 
     return { accessToken };
   } catch (error) {
-    throw new AppError(401, "Invalid refresh token");
+    throw new AppError(401, 'Invalid refresh token');
   }
 };
 
