@@ -13,13 +13,13 @@ const startServer = async () => {
     await connectDB();
     await connectRedis();
     await seedAdmin();
-    await initSocket(server);
-
     // Start Listening
     const port = env.PORT || 5000;
     server = app.listen(port, () => {
       console.log(`✅ Server is running on port ${port}`);
     });
+
+    await initSocket(server);
 
     serverGracefulShutdown(server);
   } catch (error) {

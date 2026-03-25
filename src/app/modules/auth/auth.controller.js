@@ -40,7 +40,7 @@ const registerUser = catchAsync(async (req, res) => {
     success: true,
     message:
       'Registration successful! Please check your email for the verification code.',
-    data: null,
+    data: { email: newUser.email },
   });
 });
 
@@ -56,7 +56,7 @@ const verifyOTP = catchAsync(async (req, res) => {
   const user = await User.findOneAndUpdate(
     { email },
     { isVerified: true, isActive: 'active', status: 'active' },
-    { new: true },
+    { returnDocument: 'after' },
   ).select('-password');
 
   if (!user) {
@@ -126,7 +126,7 @@ const resetPassword = catchAsync(async (req, res) => {
   const user = await User.findOneAndUpdate(
     { email },
     { password: hashedPassword },
-    { new: true },
+    { returnDocument: 'after' },
   );
 
   if (!user) {

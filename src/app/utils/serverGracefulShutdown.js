@@ -6,9 +6,16 @@ const serverGracefulShutdown = (server) => {
     );
 
     if (server) {
-      server.close(() => {
-        console.log('🔻 Server closed.');
+      // Set a timeout to force exit if server.close() takes too long
+      const forceExitTimeout = setTimeout(() => {
+        console.log('💀 Forcefully shutting down (timeout).');
         process.exit(1);
+      }, 5000);
+
+      server.close(() => {
+        clearTimeout(forceExitTimeout);
+        console.log('🔻 Server closed.');
+        process.exit(0);
       });
     } else {
       process.exit(1);
@@ -17,6 +24,7 @@ const serverGracefulShutdown = (server) => {
 
   process.on('SIGTERM', () => shutdown('SIGTERM signal received'));
   process.on('SIGINT', () => shutdown('SIGINT signal received'));
+  process.on('SIGUSR2', () => shutdown('SIGUSR2 (nodemon) signal received'));
   process.on('unhandledRejection', (err) =>
     shutdown('Unhandled Rejection detected', err),
   );

@@ -18,6 +18,11 @@ const sendOTP = async (user) => {
     EX: OTP_EXPIRATION,
   });
 
+  // Log OTP in development for easier testing
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[OTP] Generated OTP for ${user.email}: ${otp}`);
+  }
+
   // Send OTP via Email
   await sendEmail({
     to: user.email,
